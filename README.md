@@ -1,5 +1,5 @@
-🚍 Trackify: AI-Powered Public Transport for Small Cities
-Trackify is a smart, scalable platform designed to modernize public transport systems in small and mid-sized cities. By integrating GPS, IoT, and machine learning, Trackify delivers real-time tracking, predictive analytics, and commuter safety—all in one ecosystem.
+#🚍 Trackify: AI-Powered Public Transport for Small Cities
+##Trackify is a smart, scalable platform designed to modernize public transport systems in small and mid-sized cities. By integrating GPS, IoT, and machine learning, Trackify delivers real-time tracking, predictive analytics, and commuter safety—all in one ecosystem.
 
 📦 Features
 🗺️ Live Bus Tracking – Real-time location updates via GPS
