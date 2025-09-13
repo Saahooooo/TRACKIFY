@@ -34,3 +34,15 @@ npm install
 
 # Start the development server
 npm run dev
+
+## 👥 Team Tracify
+
+Meet the passionate minds behind Trackify:
+
+- **P. Krutika** 
+- **Priyambadam Ray**  
+- **Mohisha Mahanto**  
+- **Smruti Pragya Rath**  
+- **Pritam Kumar Sahu**  
+- **Spandan Koyorhi**
+
