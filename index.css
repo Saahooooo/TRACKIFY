@@ -17,31 +17,43 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 217 91% 60%;
+    /* Travel-themed primary colors */
+    --primary: 207 89% 42%;
     --primary-foreground: 0 0% 100%;
+    --primary-hover: 207 89% 35%;
 
-    --secondary: 142 76% 36%;
-    --secondary-foreground: 0 0% 100%;
+    /* Success green for confirmations */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 38 92% 50%;
-    --accent-foreground: 0 0% 100%;
-
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(200 100% 70%));
-    --gradient-secondary: linear-gradient(135deg, hsl(142 76% 36%), hsl(158 64% 52%));
-    --gradient-hero: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(142 76% 36%) 100%);
-    
-    --shadow-glow: 0 10px 40px -10px hsl(217 91% 60% / 0.3);
-    --shadow-elegant: 0 8px 30px -8px hsl(0 0% 0% / 0.1);
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 207 89% 42%;
+
+    /* Travel gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(207 89% 42%), hsl(142 71% 45%));
+    --gradient-card: linear-gradient(135deg, hsl(210 40% 98%), hsl(220 15% 97%));
+    --gradient-sky: linear-gradient(180deg, hsl(207 100% 95%), hsl(0 0% 100%));
+
+    /* Shadows */
+    --shadow-travel: 0 10px 30px -10px hsl(207 89% 42% / 0.3);
+    --shadow-card: 0 4px 20px -4px hsl(207 30% 60% / 0.1);
+
+    /* Travel theme spacing and effects */
+    --travel-border-radius: 12px;
+    --travel-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --radius: 0.5rem;
 
@@ -72,24 +84,35 @@ All colors MUST be HSL.
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 217 91% 60%;
+    --primary: 207 89% 52%;
     --primary-foreground: 0 0% 100%;
+    --primary-hover: 207 89% 45%;
 
-    --secondary: 142 76% 36%;
-    --secondary-foreground: 0 0% 100%;
+    --success: 142 71% 55%;
+    --success-foreground: 0 0% 100%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 38 92% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 207 89% 52%;
+
+    --gradient-hero: linear-gradient(135deg, hsl(207 89% 52%), hsl(142 71% 55%));
+    --gradient-card: linear-gradient(135deg, hsl(217.2 32.6% 19%), hsl(215 28% 17%));
+    --gradient-sky: linear-gradient(180deg, hsl(222.2 84% 6%), hsl(222.2 84% 4.9%));
+
+    --shadow-travel: 0 10px 30px -10px hsl(207 89% 52% / 0.4);
+    --shadow-card: 0 4px 20px -4px hsl(207 30% 10% / 0.3);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
