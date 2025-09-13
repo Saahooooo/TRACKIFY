@@ -1,73 +1,67 @@
-# Welcome to your Lovable project
+🚍 Trackify: AI-Powered Public Transport for Small Cities
+Trackify is a smart, scalable platform designed to modernize public transport systems in small and mid-sized cities. By integrating GPS, IoT, and machine learning, Trackify delivers real-time tracking, predictive analytics, and commuter safety—all in one ecosystem.
 
-## Project info
+📦 Features
+🗺️ Live Bus Tracking – Real-time location updates via GPS
 
-**URL**: https://lovable.dev/projects/0b93f023-3883-405a-bb0b-29f4a68aad91
+⏱️ Predictive ETAs – AI models trained on historical and live data
 
-## How can I edit this code?
+👥 Crowd Forecasting – Occupancy estimation for better planning
 
-There are several ways of editing your application.
+🛑 Stoppage & Halt Info – Transparent route and stop data
 
-**Use Lovable**
+🚨 SOS Alerts – Emergency response system for passenger safety
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0b93f023-3883-405a-bb0b-29f4a68aad91) and start prompting.
+🤖 AI Chatbot Assistant – Natural language support for commuter queries
 
-Changes made via Lovable will be committed automatically to this repo.
+📶 Offline Support – Works in low-bandwidth regions with smart caching
 
-**Use your preferred IDE**
+🧰 Tech Stack
+Frontend: React, TypeScript, Tailwind CSS, shadcn-ui
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Backend: Node.js, Express
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+AI/ML: Python (for ETA & occupancy prediction)
 
-Follow these steps:
+Cloud: Cloud APIs for data storage and scalability
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Build Tool: Vite
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the development server
 npm run dev
-```
+🌐 Deployment
+You can deploy Trackify using:
 
-**Edit a file directly in GitHub**
+Lovable.dev – Instant preview and publishing
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Vercel / Netlify – For frontend hosting
 
-**Use GitHub Codespaces**
+Render / Railway – For backend services
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+📈 Business & Social Impact
+Trackify is designed to be:
 
-## What technologies are used for this project?
+Cost-effective for governments and operators
 
-This project is built with:
+Scalable across cities and transport modes
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Inclusive for all demographics
 
-## How can I deploy this project?
+Aligned with India’s Smart City Mission
 
-Simply open [Lovable](https://lovable.dev/projects/0b93f023-3883-405a-bb0b-29f4a68aad91) and click on Share -> Publish.
+👥 Team Tracify
+P. Krutika
 
-## Can I connect a custom domain to my Lovable project?
+Priyambadam Ray
 
-Yes, you can!
+Mohisha Mahanto
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Smruti Pragya Rath
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Pritam Kumar Sahu
+
+Spandan Koyorhi
+
