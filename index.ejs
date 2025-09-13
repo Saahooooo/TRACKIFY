@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Bus Tracker</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Custom Styles -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .map-container {
+            flex: 1;
+            position: relative;
+            margin: 1rem;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        #map {
+            height: 100%;
+            min-height: 500px;
+        }
+        
+        .controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .control-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .control-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+        
+        .info-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            z-index: 1000;
+        }
+        
+        .info-panel h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .info-panel p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        
+        .user-count {
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.2rem;
+            z-index: 2000;
+        }
+        
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .info-panel {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                margin: 1rem;
+                max-width: none;
+            }
+            
+            .map-container {
+                margin: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚌 Real-time Bus Tracker</h1>
+        <div class="status">
+            <div class="status-indicator"></div>
+            <span id="connection-status">Connecting...</span>
+        </div>
+    </div>
+    
+    <div class="map-container">
+        <div id="loading" class="loading">Initializing location services...</div>
+        
+        <div class="controls">
+            <button class="control-btn" onclick="centerOnUser()" title="Center on my location">
+                📍
+            </button>
+            <button class="control-btn" onclick="toggleTracking()" title="Toggle location tracking" id="track-btn">
+                🎯
+            </button>
+        </div>
+        
+        <div id="map"></div>
+        
+        <div class="info-panel">
+            <h3>Live Tracking</h3>
+            <p>📍 Your location is being shared</p>
+            <p>🚌 <span id="bus-count">0</span> buses online</p>
+            <p>🌐 <span class="user-count" id="user-count">0 users</span></p>
+        </div>
+    </div>
+
+    <!-- Socket.io (simulated with mock functionality) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Mock Socket.io functionality for demo
+        class MockSocket {
+            constructor() {
+                this.id = 'user_' + Math.random().toString(36).substr(2, 9);
+                this.connected = true;
+                this.callbacks = {};
+                this.users = new Map();
+                
+                // Simulate connection
+                setTimeout(() => {
+                    this.trigger('connect');
+                }, 1000);
+                
+                // Simulate other users joining/leaving
+                this.simulateUsers();
+            }
+            
+            on(event, callback) {
+                if (!this.callbacks[event]) {
+                    this.callbacks[event] = [];
+                }
+                this.callbacks[event].push(callback);
+            }
+            
+            emit(event, data) {
+                console.log(`Emitting ${event}:`, data);
+                
+                // In a real app, this would send to server
+                if (event === 'send-location') {
+                    // Echo back as received location for demo
+                    setTimeout(() => {
+                        this.trigger('receive-location', {
+                            id: this.id,
+                            ...data
+                        });
+                    }, 100);
+                }
+            }
+            
+            trigger(event, data) {
+                if (this.callbacks[event]) {
+                    this.callbacks[event].forEach(callback => callback(data));
+                }
+            }
+            
+            simulateUsers() {
+                // Add some mock users periodically
+                const addRandomUser = () => {
+                    const userId = 'bus_' + Math.random().toString(36).substr(2, 6);
+                    const baseLat = 20.2961 + (Math.random() - 0.5) * 0.1;
+                    const baseLng = 85.8245 + (Math.random() - 0.5) * 0.1;
+                    
+                    this.users.set(userId, { lat: baseLat, lng: baseLng });
+                    
+                    this.trigger('receive-location', {
+                        id: userId,
+                        latitude: baseLat,
+                        longitude: baseLng
+                    });
+                    
+                    // Make the user move around
+                    const moveUser = () => {
+                        if (this.users.has(userId)) {
+                            const user = this.users.get(userId);
+                            user.lat += (Math.random() - 0.5) * 0.001;
+                            user.lng += (Math.random() - 0.5) * 0.001;
+                            
+                            this.trigger('receive-location', {
+                                id: userId,
+                                latitude: user.lat,
+                                longitude: user.lng
+                            });
+                            
+                            setTimeout(moveUser, 3000 + Math.random() * 5000);
+                        }
+                    };
+                    
+                    setTimeout(moveUser, 2000);
+                    
+                    // Remove user after some time
+                    setTimeout(() => {
+                        this.users.delete(userId);
+                        this.trigger('user-disconnected', userId);
+                    }, 30000 + Math.random() * 60000);
+                };
+                
+                // Add users periodically
+                setTimeout(addRandomUser, 2000);
+                setTimeout(addRandomUser, 8000);
+                setTimeout(addRandomUser, 15000);
+                
+                setInterval(() => {
+                    if (Math.random() < 0.3) addRandomUser();
+                }, 20000);
+            }
+        }
+        
+        // Initialize mock socket
+        const socket = new MockSocket();
+        
+        // Map initialization
+        const map = L.map("map").setView([20.2961, 85.8245], 13);
+        const markers = {};
+        let userMarker = null;
+        let isTracking = true;
+        let watchId = null;
+        
+        // Add tile layer
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        
+        // Custom bus icon
+        const busIcon = L.divIcon({
+            html: '<div style="background: #ff4444; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 2px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.3);">🚌</div>',
+            className: 'custom-bus-icon',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        });
+        
+        const userIcon = L.divIcon({
+            html: '<div style="background: #10b981; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 2px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.3); animation: pulse 2s infinite;">📍</div>',
+            className: 'custom-user-icon',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        });
+        
+        // Update location on map
+        function updateLocationOnMap(latitude, longitude) {
+            if (userMarker) {
+                userMarker.setLatLng([latitude, longitude]);
+            } else {
+                userMarker = L.marker([latitude, longitude], { icon: userIcon })
+                    .addTo(map)
+                    .bindPopup('<strong>Your Location</strong><br>📍 You are here!')
+                    .openPopup();
+            }
+            map.setView([latitude, longitude], 15);
+        }
+        
+        // Geolocation handling
+        function initializeLocation() {
+            if (!navigator.geolocation) {
+                handleError('Geolocation is not supported by this browser.');
+                return;
+            }
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    console.log('Initial location:', latitude, longitude);
+                    updateLocationOnMap(latitude, longitude);
+                    socket.emit("send-location", { latitude, longitude });
+                    startLocationWatching();
+                    hideLoading();
+                },
+                (error) => {
+                    console.error('Initial location error:', error);
+                    handleLocationError(error);
+                    hideLoading();
+                }, {
+                    enableHighAccuracy: false,
+                    timeout: 15000,
+                    maximumAge: 60000
+                }
+            );
+        }
+        
+        function startLocationWatching() {
+            if (!isTracking) return;
+            
+            watchId = navigator.geolocation.watchPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    updateLocationOnMap(latitude, longitude);
+                    socket.emit("send-location", { latitude, longitude });
+                },
+                (error) => {
+                    console.error('Watch position error:', error);
+                    handleLocationError(error);
+                }, {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 30000
+                }
+            );
+        }
+        
+        function handleLocationError(error) {
+            let errorMessage = '';
+            
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = "📍 Location access denied. Please enable location permissions.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = "📍 Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = "📍 Location request timed out.";
+                    break;
+                default:
+                    errorMessage = "📍 An unknown error occurred.";
+                    break;
+            }
+            
+            handleError(errorMessage);
+        }
+        
+        function handleError(message) {
+            L.popup()
+                .setLatLng(map.getCenter())
+                .setContent(`<div style="text-align: center;"><strong>⚠️ Notice</strong><br>${message}</div>`)
+                .openOn(map);
+        }
+        
+        function hideLoading() {
+            const loading = document.getElementById('loading');
+            if (loading) {
+                loading.style.display = 'none';
+            }
+        }
+        
+        // Socket event handlers
+        socket.on('connect', () => {
+            document.getElementById('connection-status').textContent = 'Connected';
+            hideLoading();
+            initializeLocation();
+        });
+        
+        socket.on("receive-location", (data) => {
+            const { id, latitude, longitude } = data;
+            
+            if (markers[id]) {
+                markers[id].setLatLng([latitude, longitude]);
+            } else {
+                const icon = id === socket.id ? userIcon : busIcon;
+                const popupContent = id === socket.id ? 
+                    '<strong>Your Location</strong><br>📍 You are here!' :
+                    `<strong>Bus ${id.substring(-6)}</strong><br>🚌 Live tracking`;
+                
+                markers[id] = L.marker([latitude, longitude], { icon })
+                    .addTo(map)
+                    .bindPopup(popupContent);
+            }
+            
+            updateCounts();
+        });
+        
+        socket.on("user-disconnected", (id) => {
+            if (markers[id]) {
+                map.removeLayer(markers[id]);
+                delete markers[id];
+                updateCounts();
+            }
+        });
+        
+        // Control functions
+        function centerOnUser() {
+            if (userMarker) {
+                map.setView(userMarker.getLatLng(), 16);
+                userMarker.openPopup();
+            } else {
+                handleError('Your location is not available yet.');
+            }
+        }
+        
+        function toggleTracking() {
+            isTracking = !isTracking;
+            const btn = document.getElementById('track-btn');
+            
+            if (isTracking) {
+                btn.textContent = '🎯';
+                btn.title = 'Disable tracking';
+                startLocationWatching();
+            } else {
+                btn.textContent = '⏸️';
+                btn.title = 'Enable tracking';
+                if (watchId) {
+                    navigator.geolocation.clearWatch(watchId);
+                    watchId = null;
+                }
+            }
+        }
+        
+        function updateCounts() {
+            const totalUsers = Object.keys(markers).length;
+            const busCount = Object.keys(markers).filter(id => id !== socket.id).length;
+            
+            document.getElementById('user-count').textContent = `${totalUsers} users`;
+            document.getElementById('bus-count').textContent = busCount;
+        }
+        
+        // Initialize the application
+        console.log('🚌 Bus Tracker initialized');
+    </script>
+</body>
+</html>
