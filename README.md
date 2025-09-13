@@ -35,7 +35,7 @@ npm install
 # Start the development server
 npm run dev
 
-## 👥 Team Tracify
+## 👥 Team Trackify
 
 Meet the passionate minds behind Trackify:
 
