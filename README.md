@@ -41,8 +41,8 @@ Meet the passionate minds behind Trackify:
 
 - **P. Krutika** 
 - **Priyambadam Ray**  
-- **Mohisha Mahanto**  
+- **Monisha Mahato**  
 - **Smruti Pragya Rath**  
-- **Pritam Kumar Sahu**  
+- **Pritam Kumar Sahoo**  
 - **Spandan Koyorhi**
 
